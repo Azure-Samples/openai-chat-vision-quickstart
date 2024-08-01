@@ -159,15 +159,15 @@ In order to run this app, you need to either have an Azure OpenAI account deploy
     azd env get-value AZURE_OPENAI_ENDPOINT
     ```
 
-3. For use with GitHub models, you'll need a `GITHUB_TOKEN` environment variable that stores a GitHub personal access token.
+3. For use with GitHub models, change `OPENAI_HOST` to "github" in the `.env` file.
+
+    You'll need a `GITHUB_TOKEN` environment variable that stores a GitHub personal access token.
     If you're running this inside a GitHub Codespace, the token will be automatically available.
     If not, generate a new [personal access token](https://github.com/settings/tokens) and run this command to set the `GITHUB_TOKEN` environment variable:
 
     ```shell
     export GITHUB_TOKEN="<your-github-token-goes-here>"
     ```
-
-    Then change `OPENAI_HOST` to "github" in the `.env` file.
 
 4. Start the development server:
 

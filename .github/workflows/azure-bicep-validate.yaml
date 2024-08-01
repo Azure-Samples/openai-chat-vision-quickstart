@@ -1,0 +1,38 @@
+name: Validate bicep scripts
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.bicep"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/*.bicep"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure CLI script
+        uses: azure/CLI@v2
+        with:
+          inlineScript: az config set bicep.use_binary_from_path=false && az bicep build -f infra/main.bicep
+
+      - name: Run Microsoft Security DevOps Analysis
+        uses: microsoft/security-devops-action@preview
+        id: msdo
+        continue-on-error: true
+        with:
+          tools: templateanalyzer
+
+      - name: Upload alerts to Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: github.repository_owner == 'Azure-Samples'
+        with:
+          sarif_file: ${{ steps.msdo.outputs.sarifFile }}
