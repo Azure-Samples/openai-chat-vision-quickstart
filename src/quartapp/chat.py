@@ -17,7 +17,9 @@ bp = Blueprint("chat", __name__, template_folder="templates", static_folder="sta
 
 @bp.before_app_serving
 async def configure_openai():
+    print("configure_openai")
     openai_host = os.getenv("OPENAI_HOST")
+    print(openai_host)
     if openai_host == "local":
         # Use a local endpoint like llamafile server
         current_app.logger.info("Using local OpenAI-compatible API with no key")
@@ -26,7 +28,7 @@ async def configure_openai():
         current_app.logger.info("Using GitHub-hosted model")
         bp.openai_client = openai.AsyncOpenAI(
             api_key=os.environ["GITHUB_TOKEN"],
-            base_url=os.getenv("GITHUB_MODELS_ENDPOINT"),
+            base_url=os.environ["GITHUB_MODELS_ENDPOINT"],
         )
     else:
         client_args = {}
