@@ -1,15 +1,13 @@
 [tool.ruff]
-select = ["E", "F", "I", "UP"]
 target-version = "py311"
 line-length = 120
 src = ["src"]
 
-[tool.ruff.isort]
-known-first-party = ["quartapp"]
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
 
-[tool.black]
-target-version =  ["py311"]
-line-length = 120
+[tool.ruff.lint.isort]
+known-first-party = ["quartapp"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --cov"

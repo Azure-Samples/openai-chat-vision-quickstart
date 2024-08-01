@@ -17,16 +17,19 @@ bp = Blueprint("chat", __name__, template_folder="templates", static_folder="sta
 
 @bp.before_app_serving
 async def configure_openai():
-    client_args = {}
-    if os.getenv("LOCAL_OPENAI_ENDPOINT"):
+    openai_host = os.getenv("OPENAI_HOST")
+    if openai_host == "local":
         # Use a local endpoint like llamafile server
         current_app.logger.info("Using local OpenAI-compatible API with no key")
-        client_args["api_key"] = "no-key-required"
-        client_args["base_url"] = os.getenv("LOCAL_OPENAI_ENDPOINT")
+        bp.openai_client = openai.AsyncOpenAI(api_key="no-key-required", base_url=os.getenv("LOCAL_OPENAI_ENDPOINT"))
+    elif openai_host == "github":
+        current_app.logger.info("Using GitHub-hosted model")
         bp.openai_client = openai.AsyncOpenAI(
-            **client_args,
+            api_key=os.environ["GITHUB_TOKEN"],
+            base_url=os.environ["GITHUB_MODELS_ENDPOINT"],
         )
     else:
+        client_args = {}
         # Use an Azure OpenAI endpoint instead,
         # either with a key or with keyless authentication
         if os.getenv("AZURE_OPENAI_KEY"):
@@ -48,8 +51,6 @@ async def configure_openai():
             )
         if not os.getenv("AZURE_OPENAI_ENDPOINT"):
             raise ValueError("AZURE_OPENAI_ENDPOINT is required for Azure OpenAI")
-        if not os.getenv("AZURE_OPENAI_CHATGPT_DEPLOYMENT"):
-            raise ValueError("AZURE_OPENAI_CHATGPT_DEPLOYMENT is required for Azure OpenAI")
         bp.openai_client = openai.AsyncAzureOpenAI(
             api_version=os.getenv("AZURE_OPENAI_API_VERSION") or "2024-02-15-preview",
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -91,7 +92,7 @@ async def chat_handler():
 
         chat_coroutine = bp.openai_client.chat.completions.create(
             # Azure Open AI takes the deployment name as the model name
-            model=os.environ["AZURE_OPENAI_CHATGPT_DEPLOYMENT"],
+            model=os.environ["OPENAI_MODEL"],
             messages=all_messages,
             stream=True,
             temperature=request_json.get("temperature", 0.5),
