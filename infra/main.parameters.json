@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "name": {
+        "value": "${AZURE_ENV_NAME}"
+      },
+      "location": {
+        "value": "${AZURE_LOCATION}"
+      },
+      "principalId": {
+        "value": "${AZURE_PRINCIPAL_ID}"
+      },
+      "openAiDeploymentName": {
+        "value": "${AZURE_OPENAI_CHATGPT_DEPLOYMENT=gpt-4o}"
+      },
+      "openAiResourceName": {
+        "value": "${AZURE_OPENAI_RESOURCE}"
+      },
+      "openAiResourceGroupName": {
+        "value": "${AZURE_OPENAI_RESOURCE_GROUP}"
+      },
+      "openAiResourceGroupLocation": {
+        "value": "${AZURE_OPENAI_RESOURCE_GROUP_LOCATION}"
+      },
+      "openAiSkuName": {
+        "value": "${AZURE_OPENAI_SKU_NAME}"
+      },
+      "openAiApiVersion": {
+        "value": "${AZURE_OPENAI_API_VERSION}"
+      },
+      "createAzureOpenAi": {
+        "value": "${CREATE_AZURE_OPENAI=true}"
+      },
+      "openAiKey": {
+        "value": "${AZURE_OPENAI_KEY}"
+      },
+      "openAiEndpoint": {
+        "value": "${AZURE_OPENAI_ENDPOINT}"
+      },
+      "createRoleForUser": {
+        "value": "${CREATE_ROLE_FOR_USER=true}"
+      },
+      "acaExists": {
+        "value": "${SERVICE_ACA_RESOURCE_EXISTS=false}"
+      },
+      "disableKeyBasedAuth": {
+        "value": "${DISABLE_KEY_BASED_AUTH=true}"
+      }
+    }
+  }

@@ -1,0 +1,19 @@
+[tool.ruff]
+select = ["E", "F", "I", "UP"]
+target-version = "py311"
+line-length = 120
+src = ["src"]
+
+[tool.ruff.isort]
+known-first-party = ["quartapp"]
+
+[tool.black]
+target-version =  ["py311"]
+line-length = 120
+
+[tool.pytest.ini_options]
+addopts = "-ra --cov"
+pythonpath = ["src"]
+
+[tool.coverage.report]
+show_missing = true

@@ -1,0 +1,7 @@
+.env
+.azure
+.pyc
+__pycache__/
+.coverage
+.idea/
+.venv/

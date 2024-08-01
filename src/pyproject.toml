@@ -1,0 +1,19 @@
+[project]
+name = "quartapp"
+version = "1.0.0"
+description = "Create a simple chat app using Quart and OpenAI"
+dependencies = [
+    "quart",
+    "werkzeug",
+    "gunicorn",
+    "uvicorn[standard]",
+    "openai",
+    "azure-identity",
+    "aiohttp",
+    "python-dotenv",
+    "pyyaml"
+    ]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"

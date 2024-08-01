@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: simple-chatgpt-python
+metadata:
+  template: simple-chatgpt-python@0.1.0-beta
+services:
+  aca:
+    project: ./src
+    language: py
+    host: containerapp
+hooks:
+    postprovision:
+      windows:
+        shell: pwsh
+        run: $output = azd env get-values; Add-Content -Path .env -Value $output;
+        interactive: true
+        continueOnError: false
+      posix:
+        shell: sh
+        run: azd env get-values > .env
+        interactive: true
+        continueOnError: false
