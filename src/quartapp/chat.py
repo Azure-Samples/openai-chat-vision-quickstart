@@ -21,10 +21,7 @@ async def configure_openai():
     if openai_host == "local":
         # Use a local endpoint like llamafile server
         current_app.logger.info("Using local OpenAI-compatible API with no key")
-        bp.openai_client = openai.AsyncOpenAI(
-            api_key="no-key-required",
-            base_url=os.getenv("LOCAL_OPENAI_ENDPOINT")
-        )
+        bp.openai_client = openai.AsyncOpenAI(api_key="no-key-required", base_url=os.getenv("LOCAL_OPENAI_ENDPOINT"))
     elif openai_host == "github":
         current_app.logger.info("Using GitHub-hosted model")
         bp.openai_client = openai.AsyncOpenAI(
