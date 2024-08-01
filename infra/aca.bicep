@@ -20,7 +20,11 @@ resource acaIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-3
 
 var env = [
   {
-    name: 'AZURE_OPENAI_CHATGPT_DEPLOYMENT'
+    name: 'OPENAI_HOST'
+    value: 'azure'
+  }
+  {
+    name: 'OPENAI_MODEL'
     value: openAiDeploymentName
   }
   {
