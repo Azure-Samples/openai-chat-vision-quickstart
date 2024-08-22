@@ -52,7 +52,7 @@ async def configure_openai():
         if not os.getenv("AZURE_OPENAI_ENDPOINT"):
             raise ValueError("AZURE_OPENAI_ENDPOINT is required for Azure OpenAI")
         bp.openai_client = openai.AsyncAzureOpenAI(
-            api_version=os.getenv("AZURE_OPENAI_API_VERSION") or "2024-02-15-preview",
+            api_version=os.getenv("AZURE_OPENAI_API_VERSION") or "2024-05-01-preview",
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             **client_args,
         )
