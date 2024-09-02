@@ -6,8 +6,7 @@
         "ghcr.io/devcontainers/features/docker-in-docker:latest": {
             "dockerDashComposeVersion": "v2.29.1"
         },
-        "ghcr.io/azure/azure-dev/azd:latest": {},
-        "ghcr.io/devcontainers/features/azure-cli:1.0.8": {}
+        "ghcr.io/azure/azure-dev/azd:latest": {}
     },
     "customizations": {
         "vscode": {
