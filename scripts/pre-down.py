@@ -1,4 +1,5 @@
 import argparse
+
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.cognitiveservices import CognitiveServicesManagementClient
 
