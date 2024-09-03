@@ -1,4 +1,5 @@
 -r src/requirements.txt
+azure-mgmt-cognitiveservices
 ruff
 pre-commit
 pytest
