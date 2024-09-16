@@ -3,11 +3,15 @@
 name: openai-chat-vision-quickstart
 metadata:
   template: openai-chat-vision-quickstart@0.1.0-beta
+requiredVersions:
+    azd: ">= 1.10.0"
 services:
   aca:
     project: ./src
     language: py
     host: containerapp
+    docker:
+      remoteBuild: true
 hooks:
   predown:
     windows:
