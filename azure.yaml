@@ -13,6 +13,15 @@ services:
     docker:
       remoteBuild: true
 hooks:
+  postprovision:
+    windows:
+      shell: pwsh
+      run: ./scripts/write_env.ps1
+      continueOnError: true
+    posix:
+      shell: sh
+      run: ./scripts/write_env.sh
+      continueOnError: true
   predown:
     windows:
       shell: pwsh
