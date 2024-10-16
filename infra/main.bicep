@@ -15,18 +15,56 @@ param principalId string = ''
 @description('Flag to decide where to create OpenAI role for current user')
 param createRoleForUser bool = true
 
-param acaExists bool = false
+@minLength(1)
+@description('Location for the OpenAI resource')
+// Look for desired models on the availability table:
+// https://learn.microsoft.com/azure/ai-services/openai/concepts/models#global-standard-model-availability
+@allowed([
+  'australiaeast'
+  'brazilsouth'
+  'canadaeast'
+  'eastus'
+  'eastus2'
+  'francecentral'
+  'germanywestcentral'
+  'japaneast'
+  'koreacentral'
+  'northcentralus'
+  'norwayeast'
+  'polandcentral'
+  'spaincentral'
+  'southafricanorth'
+  'southcentralus'
+  'southindia'
+  'swedencentral'
+  'switzerlandnorth'
+  'uksouth'
+  'westeurope'
+  'westus'
+  'westus3'
+])
+@metadata({
+  azd: {
+    type: 'location'
+  }
+})
+param openAILocation string
 
+// These parameters can be customized via azd env variables referenced in main.parameters.json:
 param openAiResourceName string = ''
 param openAiResourceGroupName string = ''
-param openAiSkuName string = ''
-param openAiDeploymentName string // Set in main.parameters.json
-param openAiDeploymentCapacity int = 30
 param openAiApiVersion string = ''
 param disableKeyBasedAuth bool = true
+// These parameters can be customized, but are set to default values in main.parameters.json:
+param openAiSkuName string
+param openAiModelName string
+param openAiModelVersion string
+param openAiDeploymentName string
+param openAiDeploymentCapacity int
+param openAiDeploymentSkuName string
 
 @description('Flag to decide whether to create Azure OpenAI instance or not')
-param createAzureOpenAi bool // Set in main.parameters.json
+param createAzureOpenAi bool = true
 
 @description('Azure OpenAI key to use for authentication. If not provided, managed identity will be used (and is preferred)')
 @secure()
@@ -35,6 +73,7 @@ param openAiKey string = ''
 @description('Azure OpenAI endpoint to use. If provided, no Azure OpenAI instance will be created.')
 param openAiEndpoint string = ''
 
+param acaExists bool = false
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var tags = { 'azd-env-name': name }
@@ -56,21 +95,22 @@ module openAi 'core/ai/cognitiveservices.bicep' = if (createAzureOpenAi) {
   scope: openAiResourceGroup
   params: {
     name: !empty(openAiResourceName) ? openAiResourceName : '${resourceToken}-cog'
+    location: openAILocation
     tags: tags
     disableLocalAuth: disableKeyBasedAuth
     sku: {
-      name: !empty(openAiSkuName) ? openAiSkuName : 'S0'
+      name: openAiSkuName
     }
     deployments: [
       {
         name: openAiDeploymentName
         model: {
           format: 'OpenAI'
-          name: 'gpt-4o'
-          version: '2024-05-13'
+          name: openAiModelName
+          version: openAiModelVersion
         }
         sku: {
-          name: 'GlobalStandard'
+          name: openAiDeploymentSkuName
           capacity: openAiDeploymentCapacity
         }
       }
