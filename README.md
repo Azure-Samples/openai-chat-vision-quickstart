@@ -5,7 +5,7 @@
 
 This repository includes a Python app that uses Azure OpenAI to generate responses to user messages and uploaded images.
 
-The project includes all the infrastructure and configuration needed to provision Azure OpenAI resources and deploy the app to [Azure Container Apps](https://learn.microsoft.com/azure/container-apps/overview) using the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview). By default, the app will use managed identity to authenticate with Azure OpenAI, and it will deploy a GPT-4o model with the Global SKU.
+The project includes all the infrastructure and configuration needed to provision Azure OpenAI resources and deploy the app to [Azure Container Apps](https://learn.microsoft.com/azure/container-apps/overview) using the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview). By default, the app will use managed identity to authenticate with Azure OpenAI, and it will deploy a GPT-4o model with the GlobalStandard SKU.
 
 We recommend first going through the [deploying steps](#deploying) before running this app locally,
 since the local app needs credentials for Azure OpenAI to work properly.
@@ -71,7 +71,6 @@ If you're not using one of the above options for opening the project, then you'l
 
     * [Azure Developer CLI (azd)](https://aka.ms/install-azd)
     * [Python 3.10+](https://www.python.org/downloads/)
-    * [Redis](https://redis.io/download)
     * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
     * [Git](https://git-scm.com/downloads)
 
