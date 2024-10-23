@@ -24,10 +24,10 @@ since the local app needs credentials for Azure OpenAI to work properly.
 
 ## Features
 
-* A Python [Quart](https://quart.palletsprojects.com/en/latest/) that uses the [openai](https://pypi.org/project/openai/) package to generate responses to user messages.
+* A Python [Quart](https://quart.palletsprojects.com/en/latest/) that uses the [openai](https://pypi.org/project/openai/) package to generate responses to user messages with uploaded image files.
 * A basic HTML/JS frontend that streams responses from the backend using [JSON Lines](http://jsonlines.org/) over a [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream).
 * [Bicep files](https://docs.microsoft.com/azure/azure-resource-manager/bicep/) for provisioning Azure resources, including Azure OpenAI, Azure Container Apps, Azure Container Registry, Azure Log Analytics, and RBAC roles.
-* Support for using [local LLMs](/docs/local_ollama.md) during development.
+* Support for using [GitHub models](https://github.com/marketplace/models) during development.
 
 ![Screenshot of the chat app](docs/screenshot_chatimage.png)
 
@@ -147,19 +147,9 @@ azd pipeline config
 
 In order to run this app, you need to either have an Azure OpenAI account deployed (from the [deploying steps](#deploying)) or use a model from [GitHub models](https://github.com/marketplace/models).
 
-1. Copy `.env.sample.azure` into `.env`:
+1. If you already deployed the app using `azd up`, then a `.env` file was created with the necessary environment variables, and you can skip to step 3.
 
-    ```shell
-    cp .env.sample .env
-    ```
-
-2. For use with Azure OpenAI, run this command to get the value of `AZURE_OPENAI_ENDPOINT` from your deployed resource group and paste it in the `.env` file:
-
-    ```shell
-    azd env get-value AZURE_OPENAI_ENDPOINT
-    ```
-
-3. For use with GitHub models, change `OPENAI_HOST` to "github" in the `.env` file.
+2. To use the app with GitHub models, change `OPENAI_HOST` to "github" in the `.env` file.
 
     You'll need a `GITHUB_TOKEN` environment variable that stores a GitHub personal access token.
     If you're running this inside a GitHub Codespace, the token will be automatically available.
@@ -169,15 +159,13 @@ In order to run this app, you need to either have an Azure OpenAI account deploy
     export GITHUB_TOKEN="<your-github-token-goes-here>"
     ```
 
-4. Start the development server:
+3. Start the development server:
 
     ```shell
     python -m quart --app src.quartapp run --port 50505 --reload
     ```
 
-This will start the app on port 50505, and you can access it at `http://localhost:50505`.
-
-To save costs during development, you may point the app at a [local LLM server](/docs/local_ollama.md).
+    This will start the app on port 50505, and you can access it at `http://localhost:50505`.
 
 ## Guidance
 
