@@ -10,6 +10,9 @@ $azureOpenAiDeployment = azd env get-value AZURE_OPENAI_DEPLOYMENT
 $azureOpenAiApiVersion = azd env get-value AZURE_OPENAI_API_VERSION
 
 Add-Content -Path $envFilePath -Value "OPENAI_HOST=azure"
+Add-Content -Path $envFilePath -Value ""
 Add-Content -Path $envFilePath -Value "OPENAI_MODEL=$azureOpenAiDeployment"
 Add-Content -Path $envFilePath -Value "AZURE_OPENAI_ENDPOINT=$azureOpenAiEndpoint"
 Add-Content -Path $envFilePath -Value "AZURE_OPENAI_API_VERSION=$azureOpenAiApiVersion"
+Add-Content -Path $envFilePath -Value ""
+Add-Content -Path $envFilePath -Value "GITHUB_MODELS_ENDPOINT=https://models.inference.ai.azure.com"
