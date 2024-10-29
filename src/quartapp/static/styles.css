@@ -16,9 +16,19 @@ html, body {
 }
 
 .background-user {
-    background-color: #2372cc;
+    background-color: #4f28b9;
 }
 
 .background-assistant {
-    background-color: #2c8310;
+    background-color: #0080ff;
+}
+
+#image-preview {
+    max-height: 150px;
+    float: right;
+    margin-left: 20px;
+}
+
+#no-messages-heading {
+    margin-top: 20%;
 }

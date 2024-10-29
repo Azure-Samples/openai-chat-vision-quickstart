@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-	<title>GPT-4o chat on image demo</title>
+    <title>GPT-4o chat on image demo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
@@ -15,68 +15,68 @@
 </head>
 <body>
     <main class="h-100 mh-100 d-flex flex-column overflow-hidden justify-content-start">
-
         <div id="messages" class="px-4 pb-4 pt-2 flex-grow-1 overflow-y-auto overflow-x-hidden align-items-stretch">
-
+            <h2 id="no-messages-heading" class="text-center">Chat with your uploaded images</h2>
             <template id="message-template-user">
                 <div class="toast-container position-static w-100 d-flex flex-column align-items-stretch">
-                        <div class="toast fade show w-75 rounded-3 align-self-end">
-                            <div class="toast-header text-light background-user">
-                                <i class="bi bi-person me-1" aria-hidden="true"></i>
-                                <strong class="me-auto text-capitalize">
-                                    You
-                                </strong>
-                            </div>
-                            <div class="toast-body message-file">
-                            </div>
-                            <div class="toast-body message-content">
-                            </div>
+                    <div class="toast fade show w-75 rounded-3 align-self-end">
+                        <div class="toast-header text-light background-user">
+                            <i class="bi bi-person me-1" aria-hidden="true"></i>
+                            <strong class="me-auto text-capitalize">
+                                You
+                            </strong>
                         </div>
+                        <div class="toast-body message-file">
+                        </div>
+                        <div class="toast-body message-content">
+                        </div>
+                    </div>
                 </div>
             </template>
 
             <template id="message-template-assistant">
                 <div class="toast-container position-static w-100 d-flex flex-column align-items-stretch">
-                        <div class="toast fade show w-75 rounded-3 align-self-start">
-                            <div class="toast-header text-light background-assistant">
-                                <i class="bi bi-robot me-1" aria-hidden="true"></i>
-                                <strong class="me-auto text-capitalize">
-                                    Assistant
-                                </strong>
-                            </div>
-                            <div class="toast-body message-content">
-                                <em class="typing-indicator">Typing...</em>
-                            </div>
+                    <div class="toast fade show w-75 rounded-3 align-self-start">
+                        <div class="toast-header text-light background-assistant">
+                            <i class="bi bi-robot me-1" aria-hidden="true"></i>
+                            <strong class="me-auto text-capitalize">
+                                Assistant
+                            </strong>
                         </div>
+                        <div class="toast-body message-content">
+                            <em class="typing-indicator">Typing...</em>
+                        </div>
+                    </div>
                 </div>
             </template>
-
-
         </div>
         <div id="chat-area" class="text-light px-4 py-2 rounded-top-5 text-dark d-flex flex-column justify-content-center background-user">
             <form id="chat-form">
-                <label for="file" class="form-label" style="color:white">Temperature:</label>
-                <div class="input-group">
-                    <i class="bi bi-thermometer-sun input-group-text" aria-hidden="true"></i>
-                    <input id="temperature" name="temperature" class="form-control form-control-sm" type="number" value="0.5" step="0.1" min="0.1" max="1.0" aria-label="Temperature"></input>
-                </div>
-                <label for="file" class="form-label" style="color:white">Upload image:</label>
-                <div class="input-group">
-                    <i class="bi bi-file-earmark-text input-group-text" aria-hidden="true"></i>
-                    <input id="file" name="file" class="form-control form-control-sm" type="file" accept=".png, .jpg" aria-label="Upload File"></input>
-                </div>
-                <label for="message" class="form-label bi" style="color:white">Ask question about image:</label>
-                <div class="input-group">
-                    <i class="bi bi-body-text input-group-text" aria-hidden="true"></i>
-                    <input id="message" name="message"  class="form-control form-control-sm" type="text" rows="1" placeholder="<Your Message>" aria-label="Ask ChatGPT"></input>
-                    <button type="submit" class="btn btn-outline-light">
-                        Send
-                        <i class="bi bi-send-fill" aria-hidden="true"></i>
-                    </button>
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+
+
+                        <label for="file" class="form-label" style="color:white">Upload image:</label>
+                        <div class="input-group mb-3">
+                            <i class="bi bi-file-earmark-text input-group-text" aria-hidden="true"></i>
+                            <input id="file" name="file" class="form-control form-control-sm" type="file" accept=".png, .jpg" aria-label="Upload File"></input>
+                        </div>
+
+                        <label for="message" class="form-label bi" style="color:white">Ask question about image:</label>
+                        <div class="input-group">
+                            <i class="bi bi-body-text input-group-text" aria-hidden="true"></i>
+                            <input id="message" name="message" class="form-control form-control-sm" type="text" rows="1" placeholder="<Your Message>" aria-label="Ask ChatGPT"></input>
+                            <button type="submit" class="btn btn-outline-light">
+                                Send
+                                <i class="bi bi-send-fill" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <img id="image-preview" class="img-fluid mt-2" style="display: none;" />
                 </div>
             </form>
         </div>
-	</main>
+    </main>
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/ai-chat-protocol@1.0.0-beta.20240610.1/dist/iife/index.js"></script>
 
@@ -98,8 +98,25 @@
 
         const client = new ChatProtocol.AIChatProtocolClient("/chat");
 
+        const fileInput = document.getElementById("file");
+        const imagePreview = document.getElementById("image-preview");
+
+        fileInput.addEventListener("change", async function() {
+            const file = fileInput.files[0];
+            if (file) {
+                const fileData = await toBase64(file);
+                imagePreview.src = fileData;
+                imagePreview.style.display = "block";
+            } else {
+                imagePreview.style.display = "none";
+            }
+        });
+
         form.addEventListener("submit", async function(e) {
             e.preventDefault();
+
+            // Hide the no-messages-heading when a message is added
+            document.getElementById("no-messages-heading").style.display = "none";
 
             const file = document.getElementById("file").files[0];
             const fileData = file ? await toBase64(file) : null;
@@ -119,18 +136,17 @@
             let messageDiv = assistantTemplateClone.querySelector(".message-content");
             targetContainer.appendChild(assistantTemplateClone);
 
-
             messages.push({
                 "role": "user",
                 "content": message
             });
 
             try {
+                messageDiv.scrollIntoView();
                 const result = await client.getStreamedCompletion(messages, {
                     context: {
                         file: fileData,
-                        file_name: file ? file.name : null,
-                        temperature: parseFloat(document.getElementById("temperature").value)
+                        file_name: file ? file.name : null
                     }
                 });
 

@@ -23,7 +23,7 @@ async def configure_openai():
         current_app.logger.info("Using local OpenAI-compatible API with no key")
         bp.openai_client = openai.AsyncOpenAI(api_key="no-key-required", base_url=os.getenv("LOCAL_OPENAI_ENDPOINT"))
     elif openai_host == "github":
-        current_app.logger.info("Using GitHub-hosted model")
+        current_app.logger.info("Using GitHub-hosted model: %s", os.environ["OPENAI_MODEL"])
         bp.openai_client = openai.AsyncOpenAI(
             api_key=os.environ["GITHUB_TOKEN"],
             base_url=os.environ["GITHUB_MODELS_ENDPOINT"],
