@@ -90,6 +90,7 @@ async def chat_handler():
         else:
             all_messages.append(request_messages[-1])
 
+        logger.info("Using model %s", os.environ["OPENAI_MODEL"])
         chat_coroutine = bp.openai_client.chat.completions.create(
             # Azure Open AI takes the deployment name as the model name
             model=os.environ["OPENAI_MODEL"],
