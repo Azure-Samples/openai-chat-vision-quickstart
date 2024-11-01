@@ -40,7 +40,7 @@ var env = [
     value: 'true'
   }
   {
-    // DefaultAzureCredential will look for an environment variable with this name:
+    // ManagedIdentityCredential will be passed this environment variable:
     name: 'AZURE_CLIENT_ID'
     value: acaIdentity.properties.clientId
   }
@@ -48,7 +48,7 @@ var env = [
 
 var envWithSecret = !empty(openAiKey) ? union(env, [
   {
-    name: 'AZURE_OPENAI_KEY'
+    name: 'AZURE_OPENAI_KEY_FOR_CHATVISION'
     secretRef: 'azure-openai-key'
   }
 ]) : env

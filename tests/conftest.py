@@ -122,12 +122,13 @@ def mock_openai_chatcompletion(monkeypatch):
 
 @pytest.fixture
 def mock_defaultazurecredential(monkeypatch):
-    monkeypatch.setattr("azure.identity.aio.DefaultAzureCredential", mock_cred.MockAzureCredential)
+    monkeypatch.setattr("azure.identity.aio.AzureDeveloperCliCredential", mock_cred.MockAzureCredential)
     monkeypatch.setattr("azure.identity.aio.ManagedIdentityCredential", mock_cred.MockAzureCredential)
 
 
 @pytest_asyncio.fixture
 async def client(monkeypatch, mock_openai_chatcompletion, mock_defaultazurecredential):
+    monkeypatch.setenv("AZURE_TENANT_ID", "test-tenant-id")
     monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "test-openai-service.openai.azure.com")
     monkeypatch.setenv("OPENAI_MODEL", "test-chatgpt")
 

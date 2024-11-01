@@ -14,6 +14,6 @@ resourceGroupName=$(grep "AZURE_OPENAI_RESOURCE_GROUP=" .env | cut -d '=' -f2  |
 echo "Getting OpenAI key from $openAiService in resourceGroup $resourceGroupName..."
 openAiKey=$(az cognitiveservices account keys list --name $openAiService --resource-group $resourceGroupName --query key1 --output tsv)
 
-echo "AZURE_OPENAI_KEY=\"$openAiKey\"" >> .env
+echo "AZURE_OPENAI_KEY_FOR_CHATVISION=\"$openAiKey\"" >> .env
 
 echo "OpenAI key has been saved to .env file."
