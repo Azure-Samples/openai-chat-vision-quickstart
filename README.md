@@ -12,7 +12,7 @@ products:
 - azure
 - azure-container-apps
 page_type: sample
-urlFragment: openai-chat-vision-quickstar
+urlFragment: openai-chat-vision-quickstart
 ---
 -->
 # Chat + Vision using Azure OpenAI (Python)
