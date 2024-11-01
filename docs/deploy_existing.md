@@ -29,7 +29,7 @@ If you don't want to deploy a new Azure OpenAI resource and just want to use an 
 azd env set CREATE_AZURE_OPENAI false
 azd env set AZURE_OPENAI_DEPLOYMENT gpt-35-turbo
 azd env set AZURE_OPENAI_ENDPOINT https://YOUR-ENDPOINT-HERE
-azd env set AZURE_OPENAI_KEY YOUR-KEY-HERE
+azd env set AZURE_OPENAI_KEY_FOR_CHATVISION YOUR-KEY-HERE
 ```
 
 ⚠️ We don't recommend using key-based access in production, but it may be useful for testing or development purposes.

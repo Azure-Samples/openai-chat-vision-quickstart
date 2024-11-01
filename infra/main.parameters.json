@@ -48,7 +48,7 @@
         "value": "${CREATE_AZURE_OPENAI=true}"
       },
       "openAiKey": {
-        "value": "${AZURE_OPENAI_KEY}"
+        "value": "${AZURE_OPENAI_KEY_FOR_CHATVISION}"
       },
       "openAiEndpoint": {
         "value": "${AZURE_OPENAI_ENDPOINT}"

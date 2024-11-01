@@ -32,28 +32,31 @@ async def configure_openai():
         client_args = {}
         # Use an Azure OpenAI endpoint instead,
         # either with a key or with keyless authentication
-        if os.getenv("AZURE_OPENAI_KEY"):
+        if os.getenv("AZURE_OPENAI_KEY_FOR_CHATVISION"):
             # Authenticate using an Azure OpenAI API key
             # This is generally discouraged, but is provided for developers
             # that want to develop locally inside the Docker container.
             current_app.logger.info("Using Azure OpenAI with key")
-            client_args["api_key"] = os.getenv("AZURE_OPENAI_KEY")
+            client_args["api_key"] = os.getenv("AZURE_OPENAI_KEY_FOR_CHATVISION")
         else:
-            # Authenticate using the default Azure credential chain
-            # See https://docs.microsoft.com/azure/developer/python/azure-sdk-authenticate#defaultazurecredential
-            # This will *not* work inside a local Docker container.
-            # If using managed user-assigned identity, make sure that AZURE_CLIENT_ID is set
-            # to the client ID of the user-assigned identity.
-            current_app.logger.info("Using Azure OpenAI with default credential")
-            default_credential = azure.identity.aio.DefaultAzureCredential(exclude_shared_token_cache_credential=True)
+            if os.getenv("RUNNING_IN_PRODUCTION"):
+                client_id = os.getenv("AZURE_CLIENT_ID")
+                current_app.logger.info(
+                    "Using Azure OpenAI with managed identity credential for client ID: %s", client_id
+                )
+                azure_credential = azure.identity.aio.ManagedIdentityCredential(client_id=client_id)
+            else:
+                tenant_id = os.environ["AZURE_TENANT_ID"]
+                current_app.logger.info(
+                    "Using Azure OpenAI with Azure Developer CLI credential for tenant ID: %s", tenant_id
+                )
+                azure_credential = azure.identity.aio.AzureCliCredential(tenant_id=tenant_id)
             client_args["azure_ad_token_provider"] = azure.identity.aio.get_bearer_token_provider(
-                default_credential, "https://cognitiveservices.azure.com/.default"
+                azure_credential, "https://cognitiveservices.azure.com/.default"
             )
-        if not os.getenv("AZURE_OPENAI_ENDPOINT"):
-            raise ValueError("AZURE_OPENAI_ENDPOINT is required for Azure OpenAI")
         bp.openai_client = openai.AsyncAzureOpenAI(
+            azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
             api_version=os.getenv("AZURE_OPENAI_API_VERSION") or "2024-05-01-preview",
-            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             **client_args,
         )
 

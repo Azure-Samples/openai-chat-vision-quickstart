@@ -48,7 +48,7 @@ async def test_chat_stream_text_history(client, snapshot):
 @pytest.mark.asyncio
 async def test_openai_key(monkeypatch):
     monkeypatch.setenv("OPENAI_HOST", "azure")
-    monkeypatch.setenv("AZURE_OPENAI_KEY", "test-key")
+    monkeypatch.setenv("AZURE_OPENAI_KEY_FOR_CHATVISION", "test-key")
     monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "test-openai-service.openai.azure.com")
     monkeypatch.setenv("OPENAI_MODEL", "test-chatgpt")
     monkeypatch.setenv("AZURE_OPENAI_VERSION", "2023-10-01-preview")

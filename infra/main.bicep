@@ -185,6 +185,7 @@ module openAiRoleBackend 'core/security/role.bicep' = if (createAzureOpenAi) {
 
 output AZURE_LOCATION string = location
 output AZURE_RESOURCE_GROUP string = resourceGroup.name
+output AZURE_TENANT_ID string = tenant().tenantId
 
 output AZURE_OPENAI_RESOURCE_NAME string = openAi.outputs.name
 output AZURE_OPENAI_DEPLOYMENT string = openAiDeploymentName

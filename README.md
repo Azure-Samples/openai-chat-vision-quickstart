@@ -91,7 +91,7 @@ If you're not using one of the above options for opening the project, then you'l
 6. Install the app as an editable package:
 
     ```shell
-    python3 -m pip install -e src
+    python -m pip install -e src
     ```
 
 7. Continue with the [deploying steps](#deploying).
@@ -197,7 +197,7 @@ You may want to consider additional security measures, such as:
 
 ### Resources
 
-* [Get started with multimodal vision chat apps using Azure OpenAI](https://learn.microsoft.com/azure/developer/ai/get-started-app-chat-vision?tabs=github-codespaces): The Microsoft Learn Quickstart article for this sample, walks through both deployment and the relevant code for working with images in chat. 
+* [Get started with multimodal vision chat apps using Azure OpenAI](https://learn.microsoft.com/azure/developer/ai/get-started-app-chat-vision?tabs=github-codespaces): The Microsoft Learn Quickstart article for this sample, walks through both deployment and the relevant code for working with images in chat.
 
 * [OpenAI Chat Application Quickstart](https://github.com/Azure-Samples/openai-chat-app-quickstart): Similar to this project, but without the vision and image uploads.
 * [OpenAI Chat Application with Microsoft Entra Authentication - MSAL SDK](https://github.com/Azure-Samples/openai-chat-app-entra-auth-local): Similar to this project, but adds user authentication with Microsoft Entra using the Microsoft Graph SDK and built-in authentication feature of Azure Container Apps.
