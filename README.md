@@ -1,3 +1,20 @@
+<!--
+---
+name: Chat + Vision using Azure OpenAI (Python)
+description: A sample Python app that uses Azure OpenAI to generate responses to user messages with uploaded images.
+languages:
+- python
+- javascript
+- bicep
+- azdeveloper
+products:
+- azure-openai
+- azure
+- azure-container-apps
+page_type: sample
+urlFragment: openai-chat-vision-quickstar
+---
+-->
 # Chat + Vision using Azure OpenAI (Python)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/openai-chat-vision-quickstart)
