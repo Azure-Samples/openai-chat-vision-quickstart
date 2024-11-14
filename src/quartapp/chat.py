@@ -50,7 +50,7 @@ async def configure_openai():
                 current_app.logger.info(
                     "Using Azure OpenAI with Azure Developer CLI credential for tenant ID: %s", tenant_id
                 )
-                azure_credential = azure.identity.aio.AzureCliCredential(tenant_id=tenant_id)
+                azure_credential = azure.identity.aio.AzureDeveloperCliCredential(tenant_id=tenant_id)
             client_args["azure_ad_token_provider"] = azure.identity.aio.get_bearer_token_provider(
                 azure_credential, "https://cognitiveservices.azure.com/.default"
             )
