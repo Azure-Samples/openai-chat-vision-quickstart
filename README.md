@@ -120,9 +120,7 @@ Once you've opened the project in [Codespaces](#github-codespaces), in [Dev Cont
 ### Azure account setup
 
 1. Sign up for a [free Azure account](https://azure.microsoft.com/free/) and create an Azure Subscription.
-2. Request access to Azure OpenAI Service by completing the form at [https://aka.ms/oai/access](https://aka.ms/oai/access) and awaiting approval.
-3. Check that you have the necessary permissions:
-
+2. Check that you have the necessary permissions:
     * Your Azure account must have `Microsoft.Authorization/roleAssignments/write` permissions, such as [Role Based Access Control Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview), [User Access Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#user-access-administrator), or [Owner](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#owner). If you don't have subscription-level permissions, you must be granted [RBAC](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview) for an existing resource group and [deploy to that existing group](/docs/deploy_existing.md#resource-group).
     * Your Azure account also needs `Microsoft.Resources/deployments/write` permissions on the subscription level.
 
