@@ -4,6 +4,7 @@
 
 html, body {
     height: 100%;
+    background-color: #f8f9fa;
 }
 
 #messages .toast-container {
@@ -31,4 +32,36 @@ html, body {
 
 #no-messages-heading {
     margin-top: 20%;
+}
+
+#chat-area {
+    background-color: white;
+    border: 1px solid #c4cad0;
+}
+
+#chat-form speech-record-button button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#chat-form speech-record-button button.speech-active {
+    border: 1px solid blue;
+    color: blue;
+    animation: pulse 1s infinite;
+}
+
+#chat-form speech-record-button button.speech-active i {
+    color: blue;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(0, 123, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
 }
