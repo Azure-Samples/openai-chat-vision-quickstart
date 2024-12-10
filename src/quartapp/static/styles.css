@@ -39,18 +39,20 @@ html, body {
     border: 1px solid #c4cad0;
 }
 
-#chat-form speech-record-button button {
+/* Speech input/output buttons */
+
+#chat-form speech-input-button button {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-#chat-form speech-record-button button.speech-active {
+speech-input-button button.speech-input-active, speech-output-button button.speech-output-active {
     border: 1px solid blue;
     color: blue;
     animation: pulse 1s infinite;
 }
 
-#chat-form speech-record-button button.speech-active i {
+speech-input-button button.speech-input-active i, speech-output-button button.speech-output-active {
     color: blue;
 }
 
