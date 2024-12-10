@@ -50,7 +50,7 @@
                 </div>
             </template>
         </div>
-        <div id="chat-area" class="text-light px-4 py-2 rounded-top-5 text-dark d-flex flex-column justify-content-center background-user">
+        <div id="chat-area" class="px-4 py-2 rounded-top-5 text-dark d-flex flex-column justify-content-center">
             <form id="chat-form">
                 <div class="d-flex">
                     <div class="flex-grow-1">
@@ -62,11 +62,12 @@
                             <input id="file" name="file" class="form-control form-control-sm" type="file" accept=".png, .jpg" aria-label="Upload File"></input>
                         </div>
 
+
                         <label for="message" class="form-label bi" style="color:white">Ask question about image:</label>
                         <div class="input-group">
-                            <i class="bi bi-body-text input-group-text" aria-hidden="true"></i>
+                            <speech-input-button></speech-input-button>
                             <input id="message" name="message" class="form-control form-control-sm" type="text" rows="1" placeholder="<Your Message>" aria-label="Ask ChatGPT"></input>
-                            <button type="submit" class="btn btn-outline-light">
+                            <button type="submit" class="btn btn-primary">
                                 Send
                                 <i class="bi bi-send-fill" aria-hidden="true"></i>
                             </button>
@@ -79,7 +80,8 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/ai-chat-protocol@1.0.0-beta.20240610.1/dist/iife/index.js"></script>
-
+    <script src="/static/speech-input.js?v=2"></script>
+    <script src="/static/speech-output.js?v=2"></script>
     <script>
         const form = document.getElementById("chat-form");
         const messageInput = document.getElementById("message");
@@ -110,6 +112,15 @@
             } else {
                 imagePreview.style.display = "none";
             }
+        });
+
+        const speechInputButton = document.querySelector("speech-input-button");
+        speechInputButton.addEventListener("speech-input-result", (event) => {
+            messageInput.value += " " + event.detail.transcript.trim();
+            messageInput.focus();
+        });
+        speechInputButton.addEventListener("speech-input-error", (event) => {
+            alert(event.detail.error);
         });
 
         form.addEventListener("submit", async function(e) {
@@ -174,6 +185,11 @@
                 });
 
                 messageInput.value = "";
+
+                const speechOutput = document.createElement("speech-output-button");
+                speechOutput.setAttribute("text", answer);
+                messageDiv.appendChild(speechOutput);
+                messageDiv.focus();
             } catch (error) {
                 messageDiv.innerHTML = "Error: " + error;
             }
