@@ -1,69 +1,72 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-html, body {
-    height: 100%;
-    background-color: #f8f9fa;
+html,
+body {
+  height: 100%;
+  background-color: #f8f9fa;
 }
 
 #messages .toast-container {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 #messages .message-file img {
-    max-width: 100%;
-    max-height: 400px;
+  max-width: 100%;
+  max-height: 400px;
 }
 
 .background-user {
-    background-color: #4f28b9;
+  background-color: #4f28b9;
 }
 
 .background-assistant {
-    background-color: #0080ff;
+  background-color: #0080ff;
 }
 
 #image-preview {
-    max-height: 150px;
-    float: right;
-    margin-left: 20px;
+  max-height: 150px;
+  float: right;
+  margin-left: 20px;
 }
 
 #no-messages-heading {
-    margin-top: 20%;
+  margin-top: 20%;
 }
 
 #chat-area {
-    background-color: white;
-    border: 1px solid #c4cad0;
+  background-color: white;
+  border: 1px solid #c4cad0;
 }
 
 /* Speech input/output buttons */
 
 #chat-form speech-input-button button {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-speech-input-button button.speech-input-active, speech-output-button button.speech-output-active {
-    border: 1px solid blue;
-    color: blue;
-    animation: pulse 1s infinite;
+speech-input-button button.speech-input-active,
+speech-output-button button.speech-output-active {
+  border: 1px solid blue;
+  color: blue;
+  animation: pulse 1s infinite;
 }
 
-speech-input-button button.speech-input-active i, speech-output-button button.speech-output-active {
-    color: blue;
+speech-input-button button.speech-input-active i,
+speech-output-button button.speech-output-active {
+  color: blue;
 }
 
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 6px rgba(0, 123, 255, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
-    }
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(0, 123, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+  }
 }
