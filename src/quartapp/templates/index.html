@@ -62,9 +62,10 @@
                             <input id="file" name="file" class="form-control form-control-sm" type="file" accept=".png, .jpg" aria-label="Upload File"></input>
                         </div>
 
+
                         <label for="message" class="form-label bi" style="color:white">Ask question about image:</label>
                         <div class="input-group">
-                            <i class="bi bi-body-text input-group-text" aria-hidden="true"></i>
+                            <speech-record-button></speech-record-button>
                             <input id="message" name="message" class="form-control form-control-sm" type="text" rows="1" placeholder="<Your Message>" aria-label="Ask ChatGPT"></input>
                             <button type="submit" class="btn btn-outline-light">
                                 Send
@@ -79,7 +80,7 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/ai-chat-protocol@1.0.0-beta.20240610.1/dist/iife/index.js"></script>
-
+    <script src="/static/speech.js"></script>
     <script>
         const form = document.getElementById("chat-form");
         const messageInput = document.getElementById("message");
@@ -110,6 +111,14 @@
             } else {
                 imagePreview.style.display = "none";
             }
+        });
+
+        const speechRecordButton = document.querySelector('speech-record-button');
+        speechRecordButton.addEventListener('speechresult', (event) => {
+            messageInput.value += " " + event.detail.transcript.trim()
+        });
+        speechRecordButton.addEventListener('speecherror', (event) => {
+            alert(event.detail.error);
         });
 
         form.addEventListener("submit", async function(e) {
