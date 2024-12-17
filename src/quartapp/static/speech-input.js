@@ -15,16 +15,31 @@ class SpeechInputButton extends HTMLElement {
     this.speechRecognition = new SpeechRecognition();
     this.speechRecognition.lang = navigator.language || navigator.userLanguage;
     this.speechRecognition.interimResults = false;
+    this.speechRecognition.continuous = true;
     this.speechRecognition.maxAlternatives = 1;
   }
 
   connectedCallback() {
     this.innerHTML = `
-        <button class="btn btn-outline-secondary" type="button">
+        <button class="btn btn-outline-secondary" type="button" title="Start recording (Shift + Space)">
             <i class="bi bi-mic"></i>
         </button>`;
     this.recordButton = this.querySelector("button");
     this.recordButton.addEventListener("click", () => this.toggleRecording());
+    document.addEventListener('keydown', this.handleKeydown.bind(this));
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('keydown', this.handleKeydown.bind(this));
+  }
+
+  handleKeydown(event) {
+    if (event.key === 'Escape') {
+        this.abortRecording();
+    } else if (event.key === ' ' && event.shiftKey) { // Shift + Space
+        event.preventDefault(); // Prevent default action
+        this.toggleRecording();
+    }
   }
 
   renderButtonOn() {
@@ -35,6 +50,15 @@ class SpeechInputButton extends HTMLElement {
   renderButtonOff() {
     this.recordButton.classList.remove("speech-input-active");
     this.recordButton.innerHTML = '<i class="bi bi-mic"></i>';
+  }
+
+
+  toggleRecording() {
+    if (this.isRecording) {
+      this.stopRecording();
+    } else {
+      this.startRecording();
+    }
   }
 
   startRecording() {
@@ -86,11 +110,11 @@ class SpeechInputButton extends HTMLElement {
               },
             })
           );
-        } else {
+        } else if (event.error != "aborted") {
           this.dispatchEvent(
             new CustomEvent("speech-input-error", {
               detail: {
-                error: "An error occurred while recording. Please try again.",
+                error: "An error occurred while recording. Please try again: " + event.error,
               },
             })
           );
@@ -103,13 +127,18 @@ class SpeechInputButton extends HTMLElement {
     this.renderButtonOn();
   }
 
-  toggleRecording() {
-    if (this.isRecording) {
+  stopRecording() {
+    if (this.speechRecognition) {
       this.speechRecognition.stop();
-    } else {
-      this.startRecording();
     }
   }
+
+  abortRecording() {
+    if (this.speechRecognition) {
+      this.speechRecognition.abort();
+    }
+  }
+
 }
 
 customElements.define("speech-input-button", SpeechInputButton);

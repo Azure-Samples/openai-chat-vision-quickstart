@@ -27,6 +27,17 @@ class SpeechOutputButton extends HTMLElement {
     this.speechButton.addEventListener("click", () =>
       this.toggleSpeechOutput()
     );
+    document.addEventListener('keydown', this.handleKeydown.bind(this));
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('keydown', this.handleKeydown.bind(this));
+  }
+
+  handleKeydown(event) {
+      if (event.key === 'Escape') {
+          this.stopSpeech();
+      }
   }
 
   renderButtonOn() {
@@ -46,9 +57,7 @@ class SpeechOutputButton extends HTMLElement {
     const text = this.getAttribute("text");
     if (this.synth != null) {
       if (this.isPlaying || text === "") {
-        this.synth.cancel(); // removes all utterances from the utterance queue.
-        this.isPlaying = false;
-        this.renderButtonOff();
+        this.stopSpeech();
         return;
       }
 
@@ -85,6 +94,14 @@ class SpeechOutputButton extends HTMLElement {
         this.renderButtonOff();
       };
     }
+  }
+
+  stopSpeech() {
+      if (this.synth) {
+          this.synth.cancel();
+          this.isPlaying = false;
+          this.renderButtonOff();
+      }
   }
 }
 
