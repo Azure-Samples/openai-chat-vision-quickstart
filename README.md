@@ -47,7 +47,7 @@ since the local app needs credentials for Azure OpenAI to work properly.
 * [Bicep files](https://docs.microsoft.com/azure/azure-resource-manager/bicep/) for provisioning Azure resources, including Azure OpenAI, Azure Container Apps, Azure Container Registry, Azure Log Analytics, and RBAC roles.
 * Support for using [GitHub models](https://github.com/marketplace/models) during development.
 
-![Screenshot of the chat app](docs/screenshot_chatimage.png)
+![Screenshot of the chat app](docs/screenshot_chatspeech.png)
 
 ## Architecture diagram
 
