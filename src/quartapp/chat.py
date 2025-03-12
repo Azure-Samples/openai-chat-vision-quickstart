@@ -26,7 +26,7 @@ async def configure_openai():
         current_app.logger.info("Using GitHub-hosted model: %s", os.environ["OPENAI_MODEL"])
         bp.openai_client = openai.AsyncOpenAI(
             api_key=os.environ["GITHUB_TOKEN"],
-            base_url=os.environ["GITHUB_MODELS_ENDPOINT"],
+            base_url="https://models.inference.ai.azure.com",
         )
     else:
         client_args = {}

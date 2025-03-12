@@ -17,4 +17,3 @@ Add-Content -Path $envFilePath -Value "AZURE_OPENAI_ENDPOINT=$azureOpenAiEndpoin
 Add-Content -Path $envFilePath -Value "AZURE_OPENAI_API_VERSION=$azureOpenAiApiVersion"
 Add-Content -Path $envFilePath -Value "AZURE_TENANT_ID=$azureTenantId"
 Add-Content -Path $envFilePath -Value ""
-Add-Content -Path $envFilePath -Value "GITHUB_MODELS_ENDPOINT=https://models.inference.ai.azure.com"
