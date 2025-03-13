@@ -17,13 +17,14 @@ bp = Blueprint("chat", __name__, template_folder="templates", static_folder="sta
 
 @bp.before_app_serving
 async def configure_openai():
-    openai_host = os.getenv("OPENAI_HOST")
+    openai_host = os.getenv("OPENAI_HOST", "github")
+    bp.model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
     if openai_host == "local":
         # Use a local endpoint like llamafile server
-        current_app.logger.info("Using local OpenAI-compatible API with no key")
+        current_app.logger.info("Using model %s from local OpenAI-compatible API with no key", bp.model_name)
         bp.openai_client = openai.AsyncOpenAI(api_key="no-key-required", base_url=os.getenv("LOCAL_OPENAI_ENDPOINT"))
     elif openai_host == "github":
-        current_app.logger.info("Using GitHub-hosted model: %s", os.environ["OPENAI_MODEL"])
+        current_app.logger.info("Using model %s from GitHub models with GITHUB_TOKEN as key", bp.model_name)
         bp.openai_client = openai.AsyncOpenAI(
             api_key=os.environ["GITHUB_TOKEN"],
             base_url="https://models.inference.ai.azure.com",
@@ -36,19 +37,21 @@ async def configure_openai():
             # Authenticate using an Azure OpenAI API key
             # This is generally discouraged, but is provided for developers
             # that want to develop locally inside the Docker container.
-            current_app.logger.info("Using Azure OpenAI with key")
+            current_app.logger.info("Using model %s from Azure OpenAI with key", bp.model_name)
             client_args["api_key"] = os.getenv("AZURE_OPENAI_KEY_FOR_CHATVISION")
         else:
             if os.getenv("RUNNING_IN_PRODUCTION"):
                 client_id = os.getenv("AZURE_CLIENT_ID")
                 current_app.logger.info(
-                    "Using Azure OpenAI with managed identity credential for client ID: %s", client_id
+                    "Using model %s from Azure OpenAI with managed identity credential for client ID %s",
+                    bp.model_name, client_id
                 )
                 azure_credential = azure.identity.aio.ManagedIdentityCredential(client_id=client_id)
             else:
                 tenant_id = os.environ["AZURE_TENANT_ID"]
                 current_app.logger.info(
-                    "Using Azure OpenAI with Azure Developer CLI credential for tenant ID: %s", tenant_id
+                    "Using model %s from Azure OpenAI with Azure Developer CLI credential for tenant ID: %s",
+                    bp.model_name, tenant_id
                 )
                 azure_credential = azure.identity.aio.AzureDeveloperCliCredential(tenant_id=tenant_id)
             client_args["azure_ad_token_provider"] = azure.identity.aio.get_bearer_token_provider(
@@ -95,7 +98,7 @@ async def chat_handler():
 
         chat_coroutine = bp.openai_client.chat.completions.create(
             # Azure Open AI takes the deployment name as the model name
-            model=os.environ["OPENAI_MODEL"],
+            model=bp.model_name,
             messages=all_messages,
             stream=True,
             temperature=request_json.get("temperature", 0.5),
