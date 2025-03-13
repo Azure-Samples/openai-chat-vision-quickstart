@@ -44,14 +44,16 @@ async def configure_openai():
                 client_id = os.getenv("AZURE_CLIENT_ID")
                 current_app.logger.info(
                     "Using model %s from Azure OpenAI with managed identity credential for client ID %s",
-                    bp.model_name, client_id
+                    bp.model_name,
+                    client_id,
                 )
                 azure_credential = azure.identity.aio.ManagedIdentityCredential(client_id=client_id)
             else:
                 tenant_id = os.environ["AZURE_TENANT_ID"]
                 current_app.logger.info(
                     "Using model %s from Azure OpenAI with Azure Developer CLI credential for tenant ID: %s",
-                    bp.model_name, tenant_id
+                    bp.model_name,
+                    tenant_id,
                 )
                 azure_credential = azure.identity.aio.AzureDeveloperCliCredential(tenant_id=tenant_id)
             client_args["azure_ad_token_provider"] = azure.identity.aio.get_bearer_token_provider(
