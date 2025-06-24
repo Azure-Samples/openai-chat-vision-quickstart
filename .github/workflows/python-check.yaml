@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-20.04"]
+        os: ["ubuntu-latest"]
         python_version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
         - uses: actions/checkout@v4
