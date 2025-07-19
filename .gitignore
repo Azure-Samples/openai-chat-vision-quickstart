@@ -5,3 +5,4 @@ __pycache__/
 .coverage
 .idea/
 .venv/
+test_env/
