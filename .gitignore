@@ -5,3 +5,6 @@ __pycache__/
 .coverage
 .idea/
 .venv/
+venv/
+venv_*/
+test_local/
