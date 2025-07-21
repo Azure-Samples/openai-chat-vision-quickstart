@@ -6,4 +6,3 @@ __pycache__/
 .idea/
 .venv/
 venv/
-venv_test/
