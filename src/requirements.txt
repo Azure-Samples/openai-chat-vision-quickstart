@@ -68,13 +68,13 @@ h2==4.2.0
     # via hypercorn
 hpack==4.1.0
     # via h2
-httpcore==1.0.7
+httpcore==1.2.0
     # via httpx
 httptools==0.6.4
     # via uvicorn
-httpx==0.28.1
+httpx==0.29.0
     # via openai
-hypercorn==0.17.3
+hypercorn==0.18.0
     # via quart
 hyperframe==6.1.0
     # via h2
@@ -164,7 +164,7 @@ typing-extensions==4.12.2
     #   pydantic-core
 urllib3==2.5.0
     # via requests
-uvicorn[standard]==0.34.0
+uvicorn[standard]==0.35.0
     # via quartapp (pyproject.toml)
 uvloop==0.21.0
     # via uvicorn
