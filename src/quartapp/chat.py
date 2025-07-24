@@ -18,7 +18,10 @@ bp = Blueprint("chat", __name__, template_folder="templates", static_folder="sta
 @bp.before_app_serving
 async def configure_openai():
     openai_host = os.getenv("OPENAI_HOST", "github")
-    bp.model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
+    if openai_host == "github":
+        bp.model_name = os.getenv("OPENAI_MODEL", "openai/gpt-4o")
+    else:
+        bp.model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
     if openai_host == "local":
         # Use a local endpoint like llamafile server
         current_app.logger.info("Using model %s from local OpenAI-compatible API with no key", bp.model_name)
@@ -27,7 +30,7 @@ async def configure_openai():
         current_app.logger.info("Using model %s from GitHub models with GITHUB_TOKEN as key", bp.model_name)
         bp.openai_client = openai.AsyncOpenAI(
             api_key=os.environ["GITHUB_TOKEN"],
-            base_url="https://models.inference.ai.azure.com",
+            base_url="https://models.github.ai/inference",
         )
     else:
         client_args = {}
