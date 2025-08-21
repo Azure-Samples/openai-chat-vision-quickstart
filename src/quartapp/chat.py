@@ -98,7 +98,7 @@ async def chat_handler():
             model=os.environ["OPENAI_MODEL"],
             messages=all_messages,
             stream=True,
-            temperature=request_json.get("temperature", 0.5),
+            temperature=request_json.get("temperature", 0.0),
         )
         try:
             async for event in await chat_coroutine:
