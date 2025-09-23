@@ -59,12 +59,11 @@ async def configure_openai():
                     tenant_id,
                 )
                 azure_credential = azure.identity.aio.AzureDeveloperCliCredential(tenant_id=tenant_id)
-            client_args["azure_ad_token_provider"] = azure.identity.aio.get_bearer_token_provider(
+            client_args["api_key"] = azure.identity.aio.get_bearer_token_provider(
                 azure_credential, "https://cognitiveservices.azure.com/.default"
             )
-        bp.openai_client = openai.AsyncAzureOpenAI(
-            azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
-            api_version=os.getenv("AZURE_OPENAI_API_VERSION") or "2024-05-01-preview",
+        bp.openai_client = openai.AsyncOpenAI(
+            base_url=os.environ["AZURE_OPENAI_ENDPOINT"],
             **client_args,
         )
 
