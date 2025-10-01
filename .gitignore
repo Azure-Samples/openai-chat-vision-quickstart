@@ -5,3 +5,7 @@ __pycache__/
 .coverage
 .idea/
 .venv/
+venv/
+
+# Compiled Bicep ARM templates
+infra/main.json

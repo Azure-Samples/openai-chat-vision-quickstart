@@ -6,3 +6,4 @@ pytest-asyncio
 pytest-snapshot
 pytest-cov
 pip-tools
+ipykernel
