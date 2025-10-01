@@ -6,6 +6,7 @@ Usage:
 Only one argument is accepted: the base URL of the deployed app.
 No environment variables or azd lookups are performed.
 """
+
 from __future__ import annotations
 
 import re
