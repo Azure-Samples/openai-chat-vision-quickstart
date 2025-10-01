@@ -1,3 +1,6 @@
+import os
+from unittest import mock
+
 import pytest
 
 import quartapp
@@ -47,43 +50,42 @@ async def test_chat_stream_text_history(client, snapshot):
 
 @pytest.mark.asyncio
 async def test_openai_key(monkeypatch):
-    monkeypatch.setenv("OPENAI_HOST", "azure")
-    monkeypatch.setenv("AZURE_OPENAI_KEY_FOR_CHATVISION", "test-key")
-    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "test-openai-service.openai.azure.com")
-    monkeypatch.setenv("OPENAI_MODEL", "test-chatgpt")
-    monkeypatch.setenv("AZURE_OPENAI_VERSION", "2023-10-01-preview")
-
     quart_app = quartapp.create_app()
-
-    async with quart_app.test_app():
-        assert quart_app.blueprints["chat"].openai_client.api_key == "test-key"
-        assert quart_app.blueprints["chat"].openai_client._azure_ad_token_provider is None
+    # We need to mock env at this point, since quart_app calls load_dotenv(override=True)
+    with mock.patch.dict(os.environ, clear=True):
+        monkeypatch.setenv("OPENAI_HOST", "azure")
+        monkeypatch.setenv("AZURE_OPENAI_KEY_FOR_CHATVISION", "test-key")
+        monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "test-openai-service.openai.azure.com")
+        monkeypatch.setenv("OPENAI_MODEL", "test-chatgpt")
+        async with quart_app.test_app():
+            assert quart_app.blueprints["chat"].openai_client.api_key == "test-key"
 
 
 @pytest.mark.asyncio
 async def test_openai_managedidentity(monkeypatch):
-    monkeypatch.setenv("OPENAI_HOST", "azure")
-    monkeypatch.setenv("RUNNING_IN_PRODUCTION", "1")
-    monkeypatch.setenv("AZURE_CLIENT_ID", "test-client-id")
-    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "test-openai-service.openai.azure.com")
-    monkeypatch.setenv("OPENAI_MODEL", "test-chatgpt")
-    monkeypatch.setenv("AZURE_OPENAI_VERSION", "2023-10-01-preview")
-
-    monkeypatch.setattr("azure.identity.aio.ManagedIdentityCredential", mock_cred.MockManagedIdentityCredential)
-
     quart_app = quartapp.create_app()
+    # We need to mock env at this point, since quart_app calls load_dotenv(override=True)
+    with mock.patch.dict(os.environ, clear=True):
+        monkeypatch.setenv("OPENAI_HOST", "azure")
+        monkeypatch.setenv("RUNNING_IN_PRODUCTION", "1")
+        monkeypatch.setenv("AZURE_CLIENT_ID", "test-client-id")
+        monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "test-openai-service.openai.azure.com")
+        monkeypatch.setenv("OPENAI_MODEL", "test-chatgpt")
 
-    async with quart_app.test_app():
-        assert quart_app.blueprints["chat"].openai_client._azure_ad_token_provider is not None
+        monkeypatch.setattr("azure.identity.aio.ManagedIdentityCredential", mock_cred.MockManagedIdentityCredential)
+
+        async with quart_app.test_app():
+            assert quart_app.blueprints["chat"].openai_client.api_key is not None
 
 
 @pytest.mark.asyncio
 async def test_openai_local(monkeypatch):
-    monkeypatch.setenv("OPENAI_HOST", "local")
-    monkeypatch.setenv("LOCAL_OPENAI_ENDPOINT", "http://localhost:8080")
-
     quart_app = quartapp.create_app()
+    # We need to mock env at this point, since quart_app calls load_dotenv(override=True)
+    with mock.patch.dict(os.environ, clear=True):
+        monkeypatch.setenv("OPENAI_HOST", "local")
+        monkeypatch.setenv("LOCAL_OPENAI_ENDPOINT", "http://localhost:8080")
 
-    async with quart_app.test_app():
-        assert quart_app.blueprints["chat"].openai_client.api_key == "no-key-required"
-        assert quart_app.blueprints["chat"].openai_client.base_url == "http://localhost:8080"
+        async with quart_app.test_app():
+            assert quart_app.blueprints["chat"].openai_client.api_key == "no-key-required"
+            assert quart_app.blueprints["chat"].openai_client.base_url == "http://localhost:8080"

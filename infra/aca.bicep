@@ -9,7 +9,6 @@ param serviceName string = 'aca'
 param exists bool
 param openAiDeploymentName string
 param openAiEndpoint string
-param openAiApiVersion string
 @secure()
 param openAiKey string = ''
 
@@ -30,10 +29,6 @@ var env = [
   {
     name: 'AZURE_OPENAI_ENDPOINT'
     value: openAiEndpoint
-  }
-  {
-    name: 'AZURE_OPENAI_API_VERSION'
-    value: openAiApiVersion
   }
   {
     name: 'RUNNING_IN_PRODUCTION'

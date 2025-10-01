@@ -110,7 +110,7 @@ multidict==6.1.0
     # via
     #   aiohttp
     #   yarl
-openai==1.66.3
+openai>=1.108.1
     # via quartapp (pyproject.toml)
 packaging==24.2
     # via gunicorn

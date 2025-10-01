@@ -18,55 +18,54 @@ bp = Blueprint("chat", __name__, template_folder="templates", static_folder="sta
 @bp.before_app_serving
 async def configure_openai():
     openai_host = os.getenv("OPENAI_HOST", "github")
-    if openai_host == "github":
-        bp.model_name = os.getenv("OPENAI_MODEL", "openai/gpt-4o")
-    else:
-        bp.model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
+
     if openai_host == "local":
-        # Use a local endpoint like llamafile server
+        bp.model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
         current_app.logger.info("Using model %s from local OpenAI-compatible API with no key", bp.model_name)
         bp.openai_client = openai.AsyncOpenAI(api_key="no-key-required", base_url=os.getenv("LOCAL_OPENAI_ENDPOINT"))
     elif openai_host == "github":
+        bp.model_name = os.getenv("OPENAI_MODEL", "openai/gpt-4o")
         current_app.logger.info("Using model %s from GitHub models with GITHUB_TOKEN as key", bp.model_name)
         bp.openai_client = openai.AsyncOpenAI(
             api_key=os.environ["GITHUB_TOKEN"],
             base_url="https://models.github.ai/inference",
         )
     else:
-        client_args = {}
         # Use an Azure OpenAI endpoint instead,
         # either with a key or with keyless authentication
+        bp.model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
         if os.getenv("AZURE_OPENAI_KEY_FOR_CHATVISION"):
             # Authenticate using an Azure OpenAI API key
             # This is generally discouraged, but is provided for developers
             # that want to develop locally inside the Docker container.
             current_app.logger.info("Using model %s from Azure OpenAI with key", bp.model_name)
-            client_args["api_key"] = os.getenv("AZURE_OPENAI_KEY_FOR_CHATVISION")
+            bp.openai_client = openai.AsyncOpenAI(
+                base_url=os.environ["AZURE_OPENAI_ENDPOINT"],
+                api_key=os.getenv("AZURE_OPENAI_KEY_FOR_CHATVISION"),
+            )
+        elif os.getenv("RUNNING_IN_PRODUCTION"):
+            client_id = os.getenv("AZURE_CLIENT_ID")
+            current_app.logger.info(
+                "Using model %s from Azure OpenAI with managed identity credential for client ID %s",
+                bp.model_name,
+                client_id,
+            )
+            azure_credential = azure.identity.aio.ManagedIdentityCredential(client_id=client_id)
         else:
-            if os.getenv("RUNNING_IN_PRODUCTION"):
-                client_id = os.getenv("AZURE_CLIENT_ID")
-                current_app.logger.info(
-                    "Using model %s from Azure OpenAI with managed identity credential for client ID %s",
-                    bp.model_name,
-                    client_id,
-                )
-                azure_credential = azure.identity.aio.ManagedIdentityCredential(client_id=client_id)
-            else:
-                tenant_id = os.environ["AZURE_TENANT_ID"]
-                current_app.logger.info(
-                    "Using model %s from Azure OpenAI with Azure Developer CLI credential for tenant ID: %s",
-                    bp.model_name,
-                    tenant_id,
-                )
-                azure_credential = azure.identity.aio.AzureDeveloperCliCredential(tenant_id=tenant_id)
-            client_args["azure_ad_token_provider"] = azure.identity.aio.get_bearer_token_provider(
+            tenant_id = os.environ["AZURE_TENANT_ID"]
+            current_app.logger.info(
+                "Using model %s from Azure OpenAI with Azure Developer CLI credential for tenant ID: %s",
+                bp.model_name,
+                tenant_id,
+            )
+            azure_credential = azure.identity.aio.AzureDeveloperCliCredential(tenant_id=tenant_id)
+            token_provider = azure.identity.aio.get_bearer_token_provider(
                 azure_credential, "https://cognitiveservices.azure.com/.default"
             )
-        bp.openai_client = openai.AsyncAzureOpenAI(
-            azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
-            api_version=os.getenv("AZURE_OPENAI_API_VERSION") or "2024-05-01-preview",
-            **client_args,
-        )
+            bp.openai_client = openai.AsyncOpenAI(
+                base_url=os.environ["AZURE_OPENAI_ENDPOINT"] + "/openai/v1/",
+                api_key=token_provider,
+            )
 
 
 @bp.after_app_serving

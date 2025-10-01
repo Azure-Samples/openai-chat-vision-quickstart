@@ -53,7 +53,6 @@ param openAILocation string
 // These parameters can be customized via azd env variables referenced in main.parameters.json:
 param openAiResourceName string = ''
 param openAiResourceGroupName string = ''
-param openAiApiVersion string = ''
 param disableKeyBasedAuth bool = true
 // These parameters can be customized, but are set to default values in main.parameters.json:
 param openAiSkuName string
@@ -155,7 +154,6 @@ module aca 'aca.bicep' = {
     containerRegistryName: containerApps.outputs.registryName
     openAiDeploymentName: openAiDeploymentName
     openAiEndpoint: createAzureOpenAi ? openAi.outputs.endpoint : openAiEndpoint
-    openAiApiVersion: openAiApiVersion
     openAiKey: openAiKey
     exists: acaExists
   }
@@ -189,7 +187,6 @@ output AZURE_TENANT_ID string = tenant().tenantId
 
 output AZURE_OPENAI_RESOURCE_NAME string = openAi.outputs.name
 output AZURE_OPENAI_DEPLOYMENT string = openAiDeploymentName
-output AZURE_OPENAI_API_VERSION string = openAiApiVersion
 output AZURE_OPENAI_ENDPOINT string = createAzureOpenAi ? openAi.outputs.endpoint : openAiEndpoint
 
 output SERVICE_ACA_IDENTITY_PRINCIPAL_ID string = aca.outputs.SERVICE_ACA_IDENTITY_PRINCIPAL_ID
