@@ -3,8 +3,7 @@ name: Deploy to Azure
 on:
   workflow_dispatch:
   push:
-    # Run when commits are pushed to mainline branch (main or master)
-    # Set this to the mainline branch you are using
+    # Run when commits are pushed to mainline branch
     branches:
       - main
 
@@ -20,6 +19,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      uri: ${{ steps.output.outputs.uri }}
     env:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
@@ -73,3 +74,44 @@ jobs:
           AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Output Deployment URI
+        id: output
+        run: |
+          azd env get-values > .env
+          source .env
+          echo "uri=$SERVICE_ACA_URI" >> "$GITHUB_OUTPUT"
+
+
+  smoketests:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: Basic smoke test (curl)
+        env:
+          URI: ${{needs.build.outputs.uri}}
+        run: |
+          echo "Sleeping 1 minute due to https://github.com/Azure/azure-dev/issues/2669"
+          sleep 60
+          curl -sSf $URI
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python (for Playwright test)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright (Python) and Browsers
+        run: |
+          pip install --no-cache-dir playwright
+          python -m playwright install --with-deps chromium
+
+      - name: End-to-End Chat UI Test (Playwright)
+        shell: bash
+        env:
+          AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+          URI: ${{needs.build.outputs.uri}}
+        run: |
+          python scripts/e2e_chat_playwright.py $URI
