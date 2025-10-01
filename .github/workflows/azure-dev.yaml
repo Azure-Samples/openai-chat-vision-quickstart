@@ -3,8 +3,11 @@ name: Deploy to Azure
 on:
   workflow_dispatch:
   push:
-    # Run when commits are pushed to mainline branch (main or master)
-    # Set this to the mainline branch you are using
+    # Run when commits are pushed to mainline branch
+    branches:
+      - main
+  pull_request:
+    # Run the same validation (provision+deploy+smoke) for PRs targeting main
     branches:
       - main
 
@@ -73,3 +76,45 @@ jobs:
           AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Smoke Test Chat Endpoint
+        # Simple post-deploy health check to ensure /chat/stream responds with HTTP 200
+        shell: bash
+        env:
+          AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+        run: |
+          set -euo pipefail
+          echo "Fetching deployed service base URI from azd environment..."
+          BASE_URL="$(azd env get-value SERVICE_ACA_URI || true)"
+          if [ -z "$BASE_URL" ]; then
+            echo "ERROR: SERVICE_ACA_URI not found in azd environment." >&2
+            exit 1
+          fi
+          # Trim possible trailing slash
+          BASE_URL="${BASE_URL%/}"
+          echo "Base URL: $BASE_URL"
+          PAYLOAD='{"messages":[{"role":"user","content":"Hello from smoke test"}],"context":{"file":null},"temperature":0}'
+          MAX_RETRIES=6
+          SLEEP_SECONDS=20
+          attempt=1
+          while [ $attempt -le $MAX_RETRIES ]; do
+            echo "Attempt $attempt of $MAX_RETRIES..."
+            # Capture HTTP status code; allow curl to fail without aborting loop
+            HTTP_CODE=$(curl -sS -o smoke_response.txt -w "%{http_code}" \
+              -H 'Content-Type: application/json' \
+              -X POST "$BASE_URL/chat/stream" \
+              --max-time 45 \
+              -d "$PAYLOAD" || echo "000")
+            echo "HTTP_CODE=$HTTP_CODE"
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "Smoke test succeeded (received 200). Showing first line of stream:"
+              head -n 1 smoke_response.txt || true
+              exit 0
+            fi
+            echo "Non-200 response (code=$HTTP_CODE). Waiting $SLEEP_SECONDS seconds before retry..."
+            sleep $SLEEP_SECONDS
+            attempt=$((attempt+1))
+          done
+          echo "Smoke test failed after $MAX_RETRIES attempts. Last response body (first 50 lines):" >&2
+          head -n 50 smoke_response.txt >&2 || true
+          exit 1
