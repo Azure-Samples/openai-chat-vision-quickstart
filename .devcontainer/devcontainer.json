@@ -9,8 +9,7 @@
         "vscode": {
             "settings": {
                 "python.defaultInterpreterPath": "/usr/local/bin/python",
-                "remote.autoForwardPorts": false,
-                "jupyter.kernels.excludePythonEnvironments": ["/usr/bin/python3"]
+                "remote.autoForwardPorts": false
             },
             "extensions": [
                 "ms-azuretools.azure-dev",
