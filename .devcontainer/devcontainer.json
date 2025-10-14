@@ -16,7 +16,8 @@
                 "ms-azuretools.vscode-bicep",
                 "ms-python.python",
                 "ms-toolsai.jupyter",
-                "GitHub.vscode-github-actions"
+                "GitHub.vscode-github-actions",
+                "donjayamanne.vscode-default-python-kernel"
             ]
         }
     },
