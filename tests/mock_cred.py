@@ -1,5 +1,5 @@
 from collections.abc import Mapping
-from typing import Any, Optional
+from typing import Any
 
 import azure.core.credentials_async
 
@@ -9,7 +9,7 @@ class MockAzureDeveloperCliCredential(azure.core.credentials_async.AsyncTokenCre
         self,
         *,
         tenant_id: str = "",
-        additionally_allowed_tenants: Optional[list[str]] = None,
+        additionally_allowed_tenants: list[str] | None = None,
         process_timeout: int = 10,
     ) -> None:
         pass
@@ -18,6 +18,6 @@ class MockAzureDeveloperCliCredential(azure.core.credentials_async.AsyncTokenCre
 # Added as Python 3.13 throws a typing error when using the above code
 class MockManagedIdentityCredential(azure.core.credentials_async.AsyncTokenCredential):
     def __init__(
-        self, *, client_id: Optional[str] = None, identity_config: Optional[Mapping[str, str]] = None, **kwargs: Any
+        self, *, client_id: str | None = None, identity_config: Mapping[str, str] | None = None, **kwargs: Any
     ) -> None:
         pass
