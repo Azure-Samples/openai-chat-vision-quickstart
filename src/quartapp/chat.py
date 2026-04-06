@@ -98,7 +98,7 @@ async def chat_handler():
             else:
                 all_input.append({"role": "user", "content": last_content})
 
-        response_stream = await bp.openai_client.responses.create(
+        openai_stream = await bp.openai_client.responses.create(
             # Azure Open AI takes the deployment name as the model name
             model=bp.model_name,
             input=all_input,
@@ -107,7 +107,7 @@ async def chat_handler():
             store=False,
         )
         try:
-            async for event in response_stream:
+            async for event in openai_stream:
                 if event.type == "response.output_text.delta":
                     yield json.dumps({"delta": {"content": event.delta, "role": None}}, ensure_ascii=False) + "\n"
                 elif event.type == "response.completed":

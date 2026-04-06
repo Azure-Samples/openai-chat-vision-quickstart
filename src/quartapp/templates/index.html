@@ -164,6 +164,10 @@
                     })
                 });
 
+                if (!response.ok || !response.body) {
+                    throw new Error(`Request failed (${response.status})`);
+                }
+
                 let answer = "";
                 for await (const chunk of readNDJSONStream(response.body)) {
                     if (!chunk.delta) {
