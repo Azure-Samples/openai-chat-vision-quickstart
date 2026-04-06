@@ -15,13 +15,13 @@
         "value": "${AZURE_OPENAI_LOCATION}"
       },
       "openAiModelName": {
-        "value": "${AZURE_OPENAI_MODEL=gpt-4o}"
+        "value": "${AZURE_OPENAI_MODEL=gpt-5.4}"
       },
       "openAiModelVersion": {
-        "value": "${AZURE_OPENAI_MODEL_VERSION=2024-05-13}"
+        "value": "${AZURE_OPENAI_MODEL_VERSION=2026-03-05}"
       },
       "openAiDeploymentName": {
-        "value": "${AZURE_OPENAI_DEPLOYMENT=gpt-4o}"
+        "value": "${AZURE_OPENAI_DEPLOYMENT=gpt-5.4}"
       },
       "openAiDeploymentCapacity": {
         "value": "${AZURE_OPENAI_DEPLOYMENT_CAPACITY=30}"
@@ -40,9 +40,6 @@
       },
       "openAiSkuName": {
         "value": "${AZURE_OPENAI_SKU_NAME=S0}"
-      },
-      "openAiApiVersion": {
-        "value": "${AZURE_OPENAI_API_VERSION}"
       },
       "createAzureOpenAi": {
         "value": "${CREATE_AZURE_OPENAI=true}"

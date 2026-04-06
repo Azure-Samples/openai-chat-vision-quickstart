@@ -18,7 +18,7 @@ param createRoleForUser bool = true
 @minLength(1)
 @description('Location for the OpenAI resource')
 // Look for desired models on the availability table:
-// https://learn.microsoft.com/azure/ai-services/openai/concepts/models#global-standard-model-availability
+// https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?tabs=global-standard-aoai%2Cglobal-standard&pivots=azure-openai#global-standard-model-availability
 @allowed([
   'australiaeast'
   'brazilsouth'
