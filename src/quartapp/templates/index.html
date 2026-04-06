@@ -179,6 +179,8 @@
                             messageDiv.innerHTML = "";
                         }
                         answer += chunk.delta.content;
+                        // Using innerHTML with model output could be an XSS risk if the model returns malicious HTML/JS.
+                        // For production use, sanitize before inserting the HTML.
                         messageDiv.innerHTML = converter.makeHtml(answer);
                         messageDiv.scrollIntoView();
                     }
