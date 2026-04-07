@@ -79,7 +79,7 @@
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@microsoft/ai-chat-protocol@1.0.0-beta.20240610.1/dist/iife/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ndjson-readablestream@1.0.7/dist/ndjson-readablestream.umd.js"></script>
     <script src="/static/speech-input.js?v=2"></script>
     <script src="/static/speech-output.js?v=2"></script>
     <script>
@@ -97,8 +97,6 @@
             reader.onload = () => resolve(reader.result);
             reader.onerror = reject;
         });
-
-        const client = new ChatProtocol.AIChatProtocolClient("/chat");
 
         const fileInput = document.getElementById("file");
         const imagePreview = document.getElementById("image-preview");
@@ -154,29 +152,41 @@
 
             try {
                 messageDiv.scrollIntoView();
-                const result = await client.getStreamedCompletion(messages, {
-                    context: {
-                        file: fileData,
-                        file_name: file ? file.name : null
-                    }
+                const response = await fetch("/chat/stream", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        messages: messages,
+                        context: {
+                            file: fileData,
+                            file_name: file ? file.name : null
+                        }
+                    })
                 });
 
+                if (!response.ok || !response.body) {
+                    throw new Error(`Request failed (${response.status})`);
+                }
+
                 let answer = "";
-                for await (const response of result) {
-                    if (!response.delta) {
+                for await (const chunk of readNDJSONStream(response.body)) {
+                    if (chunk.error) {
+                        messageDiv.innerHTML = "Error: " + chunk.error;
+                        break;
+                    }
+                    if (!chunk.delta) {
                         continue;
                     }
-                    if (response.delta.content) {
+                    if (chunk.delta.content) {
                         // Clear out the DIV if its the first answer chunk we've received
                         if (answer == "") {
                             messageDiv.innerHTML = "";
                         }
-                        answer += response.delta.content;
+                        answer += chunk.delta.content;
+                        // Using innerHTML with model output could be an XSS risk if the model returns malicious HTML/JS.
+                        // For production use, sanitize before inserting the HTML.
                         messageDiv.innerHTML = converter.makeHtml(answer);
                         messageDiv.scrollIntoView();
-                    }
-                    if (response.error) {
-                        messageDiv.innerHTML = "Error: " + response.error;
                     }
                 }
                 messages.push({
