@@ -45,7 +45,6 @@ since the local app needs credentials for Azure OpenAI to work properly.
 * A basic HTML/JS frontend that streams responses from the backend using [JSON Lines](http://jsonlines.org/) over a [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream).
 * Speech input and output buttons that use the free built-in browser APIs.
 * [Bicep files](https://docs.microsoft.com/azure/azure-resource-manager/bicep/) for provisioning Azure resources, including Azure OpenAI, Azure Container Apps, Azure Container Registry, Azure Log Analytics, and RBAC roles.
-* Support for using [GitHub models](https://github.com/marketplace/models) during development.
 
 ![Screenshot of the chat app](docs/screenshot_chatspeech.png)
 
@@ -160,22 +159,11 @@ azd pipeline config
 
 ## Development server
 
-In order to run this app, you need to either have an Azure OpenAI account deployed (from the [deploying steps](#deploying)) or use a model from [GitHub models](https://github.com/marketplace/models).
+In order to run this app, you need to have an Azure OpenAI account deployed (from the [deploying steps](#deploying)).
 
-1. If you already deployed the app using `azd up`, then a `.env` file was created with the necessary environment variables, and you can skip to step 3.
+1. If you already deployed the app using `azd up`, then a `.env` file was created with the necessary environment variables, and you can skip to step 2.
 
-2. To use the app with GitHub models, either copy `.env.sample` into a `.env` file or start from the created `.env` file.
-    Change `OPENAI_HOST` to "github" in the `.env` file.
-
-    You'll need a `GITHUB_TOKEN` environment variable that stores a GitHub personal access token.
-    If you're running this inside a GitHub Codespace, the token will be automatically available.
-    If not, generate a new [personal access token](https://github.com/settings/tokens) and run this command to set the `GITHUB_TOKEN` environment variable:
-
-    ```shell
-    export GITHUB_TOKEN="<your-github-token-goes-here>"
-    ```
-
-3. Start the development server:
+2. Start the development server:
 
     ```shell
     python -m quart --app src.quartapp run --port 50505 --reload
