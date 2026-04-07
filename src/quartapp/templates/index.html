@@ -170,6 +170,10 @@
 
                 let answer = "";
                 for await (const chunk of readNDJSONStream(response.body)) {
+                    if (chunk.error) {
+                        messageDiv.innerHTML = "Error: " + chunk.error;
+                        break;
+                    }
                     if (!chunk.delta) {
                         continue;
                     }
@@ -183,9 +187,6 @@
                         // For production use, sanitize before inserting the HTML.
                         messageDiv.innerHTML = converter.makeHtml(answer);
                         messageDiv.scrollIntoView();
-                    }
-                    if (chunk.error) {
-                        messageDiv.innerHTML = "Error: " + chunk.error;
                     }
                 }
                 messages.push({
