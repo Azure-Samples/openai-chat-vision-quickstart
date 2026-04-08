@@ -159,7 +159,7 @@ azd pipeline config
 
 ## Development server
 
-In order to run this app, you need to have an Azure OpenAI account deployed (from the [deploying steps](#deploying)).
+In order to run this app, you need to either have an Azure OpenAI account deployed (from the [deploying steps](#deploying)) or use a [local OpenAI-compatible endpoint](docs/local_ollama.md).
 
 1. If you already deployed the app using `azd up`, then a `.env` file was created with the necessary environment variables, and you can skip to step 2.
 
