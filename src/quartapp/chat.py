@@ -73,58 +73,34 @@ async def chat_handler():
     @stream_with_context
     async def response_stream():
         # This sends all messages, so API request may exceed token limits
-        # Convert previous messages to Responses API format
-        all_input = []
-        for msg in request_messages[0:-1]:
-            role = msg["role"]
-            content = msg["content"]
-            if isinstance(content, str):
-                content_type = "output_text" if role == "assistant" else "input_text"
-                all_input.append({"role": role, "content": [{"type": content_type, "text": content}]})
-            else:
-                all_input.append({"role": role, "content": content})
+        all_input = list(request_messages[0:-1])
 
-        # Add the current user message
+        # Add the current user message, appending image if provided
         if image:
-            user_content = [
-                {"type": "input_text", "text": request_messages[-1]["content"]},
-                {"type": "input_image", "image_url": image},
-            ]
+            user_content = request_messages[-1]["content"] + [{"type": "input_image", "image_url": image}]
             all_input.append({"role": "user", "content": user_content})
         else:
-            last_content = request_messages[-1]["content"]
-            if isinstance(last_content, str):
-                all_input.append({"role": "user", "content": [{"type": "input_text", "text": last_content}]})
-            else:
-                all_input.append({"role": "user", "content": last_content})
+            all_input.append(request_messages[-1])
 
         openai_stream = await bp.openai_client.responses.create(
             # Azure Open AI takes the deployment name as the model name
             model=bp.model_name,
             input=all_input,
             stream=True,
-            temperature=request_json.get("temperature", 0.5),
+            # temperature is not compatible with reasoning models with effort > none
+            temperature=0.3,
+            # Instructs the Responses API to be stateless, so that it doesn't store responses on server
             store=False,
         )
         try:
             async for event in openai_stream:
+                # Responses API emits other events: https://developers.openai.com/api/reference/resources/responses
+                # This event is the only one needed for streaming the generated text response
                 if event.type == "response.output_text.delta":
-                    yield json.dumps({"delta": {"content": event.delta, "role": None}}, ensure_ascii=False) + "\n"
-                elif event.type == "response.completed":
-                    yield (
-                        json.dumps(
-                            {"delta": {"content": None, "role": None}, "finish_reason": "stop"},
-                            ensure_ascii=False,
-                        )
-                        + "\n"
-                    )
-                elif event.type == "response.failed":
-                    error_msg = getattr(event, "error", {})
-                    current_app.logger.error("Response failed: %s", error_msg)
-                    yield json.dumps({"error": str(error_msg)}, ensure_ascii=False) + "\n"
-                elif event.type == "error":
-                    current_app.logger.error("Error event: %s", event)
-                    yield json.dumps({"error": str(event)}, ensure_ascii=False) + "\n"
+                    yield json.dumps({"type": event.type, "delta": event.delta}, ensure_ascii=False) + "\n"
+                elif event.type in ("response.failed", "error"):
+                    current_app.logger.error("Responses API error: %s", event)
+                    yield json.dumps({"type": event.type}, ensure_ascii=False) + "\n"
         except Exception as e:
             current_app.logger.exception("Error in response stream")
             yield json.dumps({"error": str(e)}, ensure_ascii=False) + "\n"

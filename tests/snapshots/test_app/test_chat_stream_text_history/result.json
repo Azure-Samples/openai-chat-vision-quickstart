@@ -1,7 +1,6 @@
-{"delta": {"content": "The ", "role": null}}
-{"delta": {"content": "capital ", "role": null}}
-{"delta": {"content": "of ", "role": null}}
-{"delta": {"content": "Germany ", "role": null}}
-{"delta": {"content": "is ", "role": null}}
-{"delta": {"content": "Berlin. ", "role": null}}
-{"delta": {"content": null, "role": null}, "finish_reason": "stop"}
+{"type": "response.output_text.delta", "delta": "The "}
+{"type": "response.output_text.delta", "delta": "capital "}
+{"type": "response.output_text.delta", "delta": "of "}
+{"type": "response.output_text.delta", "delta": "Germany "}
+{"type": "response.output_text.delta", "delta": "is "}
+{"type": "response.output_text.delta", "delta": "Berlin. "}

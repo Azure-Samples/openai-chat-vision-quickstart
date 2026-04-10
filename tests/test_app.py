@@ -20,7 +20,7 @@ async def test_chat_stream_text(client, snapshot):
         "/chat/stream",
         json={
             "messages": [
-                {"role": "user", "content": "What is the capital of France?"},
+                {"role": "user", "content": [{"type": "input_text", "text": "What is the capital of France?"}]},
             ],
             "context": {"file": ""},
         },
@@ -36,9 +36,9 @@ async def test_chat_stream_text_history(client, snapshot):
         "/chat/stream",
         json={
             "messages": [
-                {"role": "user", "content": "What is the capital of France?"},
-                {"role": "assistant", "content": "Paris"},
-                {"role": "user", "content": "What is the capital of Germany?"},
+                {"role": "user", "content": [{"type": "input_text", "text": "What is the capital of France?"}]},
+                {"role": "assistant", "content": [{"type": "output_text", "text": "Paris"}]},
+                {"role": "user", "content": [{"type": "input_text", "text": "What is the capital of Germany?"}]},
             ],
             "context": {"file": ""},
         },

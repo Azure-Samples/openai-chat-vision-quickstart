@@ -22,8 +22,6 @@ class AsyncResponsesIterator:
         # Split answer into words and emit as delta events
         for word in answer.split(" "):
             self.events.append(MockResponseEvent("response.output_text.delta", word + " "))
-        # Emit completed event at the end
-        self.events.append(MockResponseEvent("response.completed"))
         self.index = 0
 
     def __aiter__(self):

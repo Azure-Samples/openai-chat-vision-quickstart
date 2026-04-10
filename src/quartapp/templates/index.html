@@ -146,9 +146,9 @@
             targetContainer.appendChild(assistantTemplateClone);
 
             messages.push({
-                "role": "user",
-                "content": message
-            });
+                    "role": "user",
+                    "content": [{"type": "input_text", "text": message}]
+                });
 
             try {
                 messageDiv.scrollIntoView();
@@ -170,19 +170,16 @@
 
                 let answer = "";
                 for await (const chunk of readNDJSONStream(response.body)) {
-                    if (chunk.error) {
-                        messageDiv.innerHTML = "Error: " + chunk.error;
+                    if (chunk.type === "error" || chunk.type === "response.failed") {
+                        messageDiv.innerHTML = "Error: " + (chunk.error || "Unknown error");
                         break;
                     }
-                    if (!chunk.delta) {
-                        continue;
-                    }
-                    if (chunk.delta.content) {
+                    if (chunk.type === "response.output_text.delta") {
                         // Clear out the DIV if its the first answer chunk we've received
                         if (answer == "") {
                             messageDiv.innerHTML = "";
                         }
-                        answer += chunk.delta.content;
+                        answer += chunk.delta;
                         // Using innerHTML with model output could be an XSS risk if the model returns malicious HTML/JS.
                         // For production use, sanitize before inserting the HTML.
                         messageDiv.innerHTML = converter.makeHtml(answer);
@@ -191,7 +188,7 @@
                 }
                 messages.push({
                     "role": "assistant",
-                    "content": answer
+                    "content": [{"type": "output_text", "text": answer}]
                 });
 
                 messageInput.value = "";
