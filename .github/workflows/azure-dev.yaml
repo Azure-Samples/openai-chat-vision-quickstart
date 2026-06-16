@@ -19,6 +19,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
     outputs:
       uri: ${{ steps.output.outputs.uri }}
     env:
