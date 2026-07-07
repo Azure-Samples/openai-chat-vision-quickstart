@@ -147,16 +147,6 @@ Once you've opened the project in [Codespaces](#github-codespaces), in [Dev Cont
     azd deploy
     ```
 
-### Continuous deployment with GitHub Actions
-
-This project includes a Github workflow for deploying the resources to Azure
-on every push to main. That workflow requires several Azure-related authentication secrets
-to be stored as Github action secrets. To set that up, run:
-
-```shell
-azd pipeline config
-```
-
 ## Development server
 
 In order to run this app, you need to either have an Azure OpenAI account deployed (from the [deploying steps](#deploying)) or use a [local OpenAI-compatible endpoint](docs/local_ollama.md).
