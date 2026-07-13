@@ -132,7 +132,7 @@ pyjwt[crypto]==2.10.1
     # via
     #   msal
     #   pyjwt
-python-dotenv==1.0.1
+python-dotenv==1.2.2
     # via
     #   quartapp (pyproject.toml)
     #   uvicorn
