@@ -21,7 +21,7 @@ anyio==4.8.0
     #   watchfiles
 attrs==25.2.0
     # via aiohttp
-azure-core==1.32.0
+azure-core==1.38.0
     # via azure-identity
 azure-identity==1.21.0
     # via quartapp (pyproject.toml)
