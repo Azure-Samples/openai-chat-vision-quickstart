@@ -79,6 +79,9 @@
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"
+        integrity="sha384-JEyTNhjM6R1ElGoJns4U2Ln4ofPcqzSsynQkmEc/KGy6336qAZl70tDLufbkla+3"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/ndjson-readablestream@1.0.7/dist/ndjson-readablestream.umd.js"></script>
     <script src="/static/speech-input.js?v=2"></script>
     <script src="/static/speech-output.js?v=2"></script>
@@ -171,18 +174,19 @@
                 let answer = "";
                 for await (const chunk of readNDJSONStream(response.body)) {
                     if (chunk.type === "error" || chunk.type === "response.failed") {
-                        messageDiv.innerHTML = "Error: " + (chunk.error || "Unknown error");
+                        messageDiv.textContent = "Error: " + (chunk.error || "Unknown error");
                         break;
                     }
                     if (chunk.type === "response.output_text.delta") {
                         // Clear out the DIV if its the first answer chunk we've received
                         if (answer == "") {
-                            messageDiv.innerHTML = "";
+                            messageDiv.replaceChildren();
                         }
                         answer += chunk.delta;
-                        // Using innerHTML with model output could be an XSS risk if the model returns malicious HTML/JS.
-                        // For production use, sanitize before inserting the HTML.
-                        messageDiv.innerHTML = converter.makeHtml(answer);
+                        const sanitizedAnswer = DOMPurify.sanitize(converter.makeHtml(answer), {
+                            RETURN_DOM_FRAGMENT: true
+                        });
+                        messageDiv.replaceChildren(sanitizedAnswer);
                         messageDiv.scrollIntoView();
                     }
                 }
@@ -198,7 +202,13 @@
                 messageDiv.appendChild(speechOutput);
                 messageInput.focus();
             } catch (error) {
-                messageDiv.innerHTML = "Error: " + error;
+                let errorMessage = "Unknown error";
+                if (error instanceof Error) {
+                    errorMessage = error.message;
+                } else if (typeof error === "string") {
+                    errorMessage = error;
+                }
+                messageDiv.textContent = "Error: " + errorMessage;
             }
         });
     </script>
